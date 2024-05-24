@@ -7,8 +7,6 @@ input=commandArgs(trailing=TRUE)
 functional_directory=input[1]
 patientID=input[2]
 
-#print(functional_directory)
-
 selectMclustG <- function(dist){
 
 if(length(dist) < 10000) {
@@ -157,7 +155,7 @@ if(length(VariantList_subclonalRemoved) >= 50000){
 exclusionVAF <- round(x=exclusionVAF,digits = 3)
 
 
-#For double checking the number of variants in hypermutated spots
+#For double-checking the number of variants in hypermutated spots
 VariantList_subclonalRemoved <- as.character(t1[t1$VAF >= exclusionVAF, ]$V1)
 
 #str(VariantList_subclonalRemoved)
@@ -171,8 +169,6 @@ subclonal_variants <- append(subclonal_variants,VariantList_subclonalRemoved)
 
 #par(mfrow=c(3,1))
 plot.Mclust(denser,what = "classification",xlim=c(0,1),col=head(colors,n=denser$G) ,xlab = paste("Het cluster=",hetcluster,"Homo-cluster=",homocluster," & exclusion VAF=", exclusionVAF,"From samples:",samplename, "Variants above threshold=", length(VariantList_subclonalRemoved),sep = " "))
-#plot.Mclust(denser,what = "BIC")
-#plot.Mclust(denser,what = "density",xlab = paste("Sample Name: ",samplename,sep=""))
 
 print(paste("Exclusion VAF is: ",exclusionVAF," From samples: ",samplename,sep=""))
 }
@@ -193,10 +189,10 @@ colNumber_altCount <- total[,grep(pattern = "V2",x=colnames(total))]
 colNumber_totalCount <- total[,grep(pattern = "V3",x=colnames(total))]
 colNumber_var_read_prob <- total[,grep(pattern = "V4",x=colnames(total))]
 
-#Replace 0 with 0.01 read probability to avoid divide by zero problems
+#Replace 0 with 0.01 read probability to avoid dividing by zero problems
 colNumber_var_read_prob[colNumber_var_read_prob==0]=0.01
 
-#Collapse into appropriate format
+#Collapse into the appropriate format
 if(is.null(dim(colNumber_altCount))==FALSE){
 colNumber_altCount <- data.frame(apply(colNumber_altCount, 1, paste, collapse=","), stringsAsFactors=FALSE)
 colNumber_totalCount <- data.frame(apply(colNumber_totalCount, 1, paste, collapse=","), stringsAsFactors=FALSE)
@@ -208,7 +204,7 @@ newCompleted_varRead <- data.frame(newCompleted_varRead,stringsAsFactors=FALSE)
 colnames(newCompleted_varRead) <- c("VariantName","alt_reads","total_read","var_read_prob")
 newCompleted_varRead$VariantName <- as.character(newCompleted_varRead$VariantName)
 
-#Keep only variants from the completed table that are clonal in one or more samples.
+#Keep only clonal variants from the completed table in one or more samples.
 NewCompleted <- newCompleted_varRead[newCompleted_varRead$VariantName %in% unique(subclonal_variants), ]
 
 CommonVariants <- read.table(file="/home/ahgillmo/master_scripts_slurm/pairtree_scripts/Tumor_cellLine_Xenograft_common_mutations.tsv",stringsAsFactors = F)
